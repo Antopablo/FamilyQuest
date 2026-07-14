@@ -125,6 +125,9 @@ export function Button({
         onPress={handlePress}
         disabled={isDisabled}
         testID={testID}
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        accessibilityState={{ disabled: isDisabled, busy: loading }}
         android_ripple={{ color: 'rgba(255, 255, 255, 0.25)', borderless: false }}
         style={({ pressed }) => [
           styles.base,

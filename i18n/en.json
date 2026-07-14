@@ -16,7 +16,9 @@
     "actions": "Actions",
     "back": "Back",
     "points": "points",
-    "pts": "pts"
+    "pts": "pts",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "auth": {
     "login": "Log in",

@@ -16,7 +16,9 @@
     "actions": "Actions",
     "back": "Retour",
     "points": "points",
-    "pts": "pts"
+    "pts": "pts",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   },
   "auth": {
     "login": "Se connecter",

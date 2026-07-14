@@ -20,6 +20,7 @@ export function Touchable({
 }: TouchableProps) {
   return (
     <Pressable
+      accessibilityRole="button"
       android_ripple={{ color: 'rgba(0, 0, 0, 0.1)', borderless: false }}
       style={({ pressed }) => [
         style as ViewStyle,

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextInput, View, Text, StyleSheet, TextInputProps, Pressable } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, BORDER_RADIUS, SPACING, FONT_SIZES } from '@/lib/constants';
 
@@ -9,6 +10,7 @@ interface InputProps extends TextInputProps {
 }
 
 export function Input({ label, error, style, secureTextEntry, ...props }: InputProps) {
+  const { t } = useTranslation();
   const [hidden, setHidden] = useState(true);
   const isPassword = secureTextEntry !== undefined && secureTextEntry;
 
@@ -20,6 +22,7 @@ export function Input({ label, error, style, secureTextEntry, ...props }: InputP
           style={[styles.input, isPassword && styles.inputWithToggle, style]}
           placeholderTextColor={COLORS.textLight}
           secureTextEntry={isPassword ? hidden : false}
+          accessibilityLabel={label}
           {...props}
         />
         {isPassword && (
@@ -27,6 +30,8 @@ export function Input({ label, error, style, secureTextEntry, ...props }: InputP
             onPress={() => setHidden((h) => !h)}
             style={styles.eyeButton}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            accessibilityRole="button"
+            accessibilityLabel={t(hidden ? 'common.showPassword' : 'common.hidePassword')}
           >
             <Ionicons
               name={hidden ? 'eye-off-outline' : 'eye-outline'}
