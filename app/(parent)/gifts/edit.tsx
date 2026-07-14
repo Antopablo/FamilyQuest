@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { COLORS, SPACING } from '@/lib/constants';
 import { giftEditSchema, validationErrorKey } from '@/lib/validation';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 
 export default function EditGiftScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -49,7 +50,9 @@ export default function EditGiftScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
+      <ScreenHeader title={t('gifts.title')} />
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <Input
         label={t('gifts.giftTitle')}
         value={title}
@@ -95,7 +98,8 @@ export default function EditGiftScreen() {
         disabled={!title}
         style={styles.button}
       />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -103,6 +107,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  scroll: {
+    flex: 1,
   },
   content: {
     padding: SPACING.lg,

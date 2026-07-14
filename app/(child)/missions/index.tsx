@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Touchable } from '@/components/ui/Touchable';
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from '@/lib/constants';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Mission } from '@/types';
 
 export default function ChildMissionsScreen() {
@@ -78,21 +79,25 @@ export default function ChildMissionsScreen() {
   if (!loading && missions.length === 0) {
     return (
       <View style={styles.container}>
+        <ScreenHeader title={t('missions.title')} />
         <EmptyState icon="rocket-outline" title={t('missions.noMissions')} />
       </View>
     );
   }
 
   return (
-    <FlatList
-      style={styles.container}
-      contentContainerStyle={styles.list}
-      showsVerticalScrollIndicator={false}
-      data={missions}
-      keyExtractor={(item) => item.id}
-      renderItem={renderMission}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-    />
+    <View style={styles.container}>
+      <ScreenHeader title={t('missions.title')} />
+      <FlatList
+        style={styles.scroll}
+        contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
+        data={missions}
+        keyExtractor={(item) => item.id}
+        renderItem={renderMission}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      />
+    </View>
   );
 }
 
@@ -100,6 +105,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  scroll: {
+    flex: 1,
   },
   list: {
     padding: SPACING.lg,

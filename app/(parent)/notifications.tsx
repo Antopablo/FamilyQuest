@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { COLORS, SPACING, FONT_SIZES } from '@/lib/constants';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Notification } from '@/types';
 
 export default function ParentNotificationsScreen() {
@@ -71,6 +72,7 @@ export default function ParentNotificationsScreen() {
 
   return (
     <View style={styles.container}>
+      <ScreenHeader title={t('notifications.title')} />
       {unreadCount > 0 && (
         <Button
           title={t('notifications.markAllRead')}

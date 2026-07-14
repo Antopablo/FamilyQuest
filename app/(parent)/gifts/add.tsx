@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Touchable } from '@/components/ui/Touchable';
 import { COLORS, SPACING, FONT_SIZES } from '@/lib/constants';
 import { giftInputSchema, validationErrorKey } from '@/lib/validation';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 
 export default function ParentAddGiftScreen() {
   const { t } = useTranslation();
@@ -79,7 +80,9 @@ export default function ParentAddGiftScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
+      <ScreenHeader title={t('gifts.title')} />
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <Text style={styles.sectionLabel}>{t('gifts.selectChild')}</Text>
       <View style={styles.childrenRow}>
         <Touchable onPress={toggleAllFamily}>
@@ -161,7 +164,8 @@ export default function ParentAddGiftScreen() {
         disabled={!title || !hasSelection || !pointsCost}
         style={styles.button}
       />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -169,6 +173,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  scroll: {
+    flex: 1,
   },
   content: {
     padding: SPACING.lg,

@@ -7,6 +7,7 @@ import { useFamilyStore } from '@/stores/familyStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { COLORS, SPACING } from '@/lib/constants';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 
 export default function AddChildScreen() {
   const { t } = useTranslation();
@@ -32,7 +33,9 @@ export default function AddChildScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
+      <ScreenHeader title={t('family.title')} />
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <Input
         label={t('auth.displayName')}
         value={displayName}
@@ -54,7 +57,8 @@ export default function AddChildScreen() {
         disabled={!displayName || password.length < 6}
         style={styles.button}
       />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -62,6 +66,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  scroll: {
+    flex: 1,
   },
   content: {
     padding: SPACING.lg,

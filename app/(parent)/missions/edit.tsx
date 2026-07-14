@@ -6,6 +6,7 @@ import { useMissionsStore } from '@/stores/missionsStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Touchable } from '@/components/ui/Touchable';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from '@/lib/constants';
 import { MissionRecurrence } from '@/types';
 import { missionInputSchema, validationErrorKey } from '@/lib/validation';
@@ -55,7 +56,9 @@ export default function EditMissionScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
+      <ScreenHeader title={t('missions.title')} />
+      <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <Input
         label={t('missions.missionTitle')}
         value={title}
@@ -109,7 +112,8 @@ export default function EditMissionScreen() {
         disabled={!title || !points}
         style={styles.button}
       />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -117,6 +121,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  scroll: {
+    flex: 1,
   },
   content: {
     padding: SPACING.lg,
