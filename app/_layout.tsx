@@ -27,7 +27,6 @@ export default function RootLayout() {
 
     const timeout = setTimeout(() => {
       if (!useAuthStore.getState().profile) {
-        console.log('[auth guard] session exists but no profile found - signing out');
         profileCheckDone.current = true;
         signOut();
       }

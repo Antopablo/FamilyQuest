@@ -54,13 +54,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signUp: async (email: string, password: string, displayName: string, role: UserRole = 'child') => {
-    console.log('[signUp] starting...');
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) {
-      console.log('[signUp] auth error:', JSON.stringify(error));
       throw error;
     }
-    console.log('[signUp] auth success, user:', data.user?.id);
 
     if (data.user && data.user.identities && data.user.identities.length === 0) {
       throw new Error('Cette adresse email est déjà utilisée.');
@@ -73,22 +70,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         display_name: displayName,
         role,
       };
-      console.log('[signUp] inserting profile:', JSON.stringify(insertData));
       const { data: profileData, error: profileError } = await (supabase.from('profiles') as any)
         .insert(insertData)
         .select();
-      console.log('[signUp] profile insert result:', JSON.stringify(profileData));
       if (profileError) {
-        console.log('[signUp] profile insert ERROR:', JSON.stringify(profileError));
         throw profileError;
       }
       // Set profile in store immediately to prevent stale session timeout
       if (profileData && profileData.length > 0) {
         set({ profile: profileData[0] as Profile });
       }
-      console.log('[signUp] profile created and stored successfully');
-    } else {
-      console.log('[signUp] WARNING: data.user is null - email confirmation may be required');
     }
   },
 

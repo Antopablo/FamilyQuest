@@ -32,14 +32,10 @@ export default function FamilySetupScreen() {
     setLoading(true);
     try {
       const currentProfile = useAuthStore.getState().profile!;
-      console.log('creating family for:', currentProfile.id);
       await createFamily(familyName, currentProfile.id);
-      console.log('family created, fetching profile...');
       await fetchProfile();
-      console.log('done, profile:', JSON.stringify(useAuthStore.getState().profile));
     } catch (error: any) {
       const msg = error?.message || error?.details || JSON.stringify(error);
-      console.log('ERROR:', msg);
       Alert.alert('Erreur creation famille', msg);
     } finally {
       setLoading(false);

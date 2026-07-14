@@ -31,7 +31,7 @@ export async function registerForPushNotifications(userId: string): Promise<stri
   }
 
   if (!Device.isDevice) {
-    console.log('Push notifications require a physical device');
+    console.warn('[Notifications] Push notifications require a physical device');
     return null;
   }
 
@@ -46,7 +46,7 @@ export async function registerForPushNotifications(userId: string): Promise<stri
   }
 
   if (finalStatus !== 'granted') {
-    console.log('Push notification permission not granted');
+    console.warn('[Notifications] Push notification permission not granted');
     return null;
   }
 
