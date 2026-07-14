@@ -43,14 +43,14 @@ export const useMissionsStore = create<MissionsState>((set, get) => ({
   },
 
   createMission: async (mission) => {
-    const { data, error } = await (supabase.from('missions') as any).insert(mission).select('id').single();
+    const { data, error } = await supabase.from('missions').insert(mission).select('id').single();
     if (error) throw error;
     await get().fetchMissions(mission.family_id);
     return data.id as string;
   },
 
   updateMission: async (missionId, updates) => {
-    const { error } = await (supabase.from('missions') as any)
+    const { error } = await supabase.from('missions')
       .update(updates)
       .eq('id', missionId);
     if (error) throw error;
@@ -64,15 +64,15 @@ export const useMissionsStore = create<MissionsState>((set, get) => ({
 
   archiveMission: async (missionId: string) => {
     // Delete non-completed submissions (claimed/pending) linked to this mission
-    const { error: subError } = await (supabase
-      .from('mission_submissions') as any)
+    const { error: subError } = await supabase
+      .from('mission_submissions')
       .delete()
       .eq('mission_id', missionId)
       .in('status', ['claimed', 'pending']);
     if (subError) throw subError;
 
-    const { error } = await (supabase
-      .from('missions') as any)
+    const { error } = await supabase
+      .from('missions')
       .update({ status: 'archived' })
       .eq('id', missionId);
     if (error) throw error;
@@ -97,7 +97,7 @@ export const useMissionsStore = create<MissionsState>((set, get) => ({
   },
 
   claimMission: async (missionId, childId, familyId, assignedByParent) => {
-    const { error } = await (supabase.from('mission_submissions') as any).insert({
+    const { error } = await supabase.from('mission_submissions').insert({
       mission_id: missionId,
       child_id: childId,
       family_id: familyId,
@@ -131,7 +131,7 @@ export const useMissionsStore = create<MissionsState>((set, get) => ({
           notifyParents(
             familyId,
             'Mission prise',
-            `${(childProfile as any).display_name} a pris la mission "${mission.title}"`,
+            `${childProfile.display_name} a pris la mission "${mission.title}"`,
             'mission_claimed',
             { screen: '(parent)/missions', missionId }
           ).catch(() => { });
@@ -141,7 +141,7 @@ export const useMissionsStore = create<MissionsState>((set, get) => ({
   },
 
   submitMission: async (missionId, childId, familyId, note) => {
-    const { error } = await (supabase.from('mission_submissions') as any).insert({
+    const { error } = await supabase.from('mission_submissions').insert({
       mission_id: missionId,
       child_id: childId,
       family_id: familyId,
@@ -152,7 +152,7 @@ export const useMissionsStore = create<MissionsState>((set, get) => ({
   },
 
   completeClaim: async (submissionId, familyId, note) => {
-    const { data, error } = await (supabase.from('mission_submissions') as any)
+    const { data, error } = await supabase.from('mission_submissions')
       .update({
         status: 'pending',
         note: note ?? null,
@@ -177,7 +177,7 @@ export const useMissionsStore = create<MissionsState>((set, get) => ({
         notifyParents(
           familyId,
           'Mission soumise',
-          `${(childProfile as any).display_name} a termine la mission "${mission.title}" et attend ta validation`,
+          `${childProfile.display_name} a termine la mission "${mission.title}" et attend ta validation`,
           'mission_submitted',
           { screen: '(parent)/missions', missionId: mission.id }
         ).catch(() => { });
@@ -186,8 +186,8 @@ export const useMissionsStore = create<MissionsState>((set, get) => ({
   },
 
   validateSubmission: async (submissionId, status, validatedBy) => {
-    const { error } = await (supabase
-      .from('mission_submissions') as any)
+    const { error } = await supabase
+      .from('mission_submissions')
       .update({
         status,
         validated_by: validatedBy,
@@ -226,7 +226,7 @@ export const useMissionsStore = create<MissionsState>((set, get) => ({
 
   parentDirectValidate: async (missionId, childId, familyId, validatedBy) => {
     // Step 1: Insert submission as 'claimed'
-    const { data, error: insertError } = await (supabase.from('mission_submissions') as any)
+    const { data, error: insertError } = await supabase.from('mission_submissions')
       .insert({
         mission_id: missionId,
         child_id: childId,
@@ -238,7 +238,7 @@ export const useMissionsStore = create<MissionsState>((set, get) => ({
     if (insertError) throw insertError;
 
     // Step 2: Update to 'approved' so the AFTER UPDATE trigger fires and credits points
-    const { error: updateError } = await (supabase.from('mission_submissions') as any)
+    const { error: updateError } = await supabase.from('mission_submissions')
       .update({
         status: 'approved',
         validated_by: validatedBy,

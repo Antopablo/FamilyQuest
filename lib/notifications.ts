@@ -2,6 +2,8 @@ import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { supabase } from './supabase';
+import { NotificationType } from '@/types';
+import { Json } from '@/types/database';
 
 const isExpoGo = Constants.appOwnership === 'expo';
 
@@ -57,8 +59,8 @@ export async function registerForPushNotifications(userId: string): Promise<stri
   const token = tokenData.data;
 
   // Store token in user's profile
-  await (supabase
-    .from('profiles') as any)
+  await supabase
+    .from('profiles')
     .update({ expo_push_token: token })
     .eq('id', userId);
 
@@ -106,7 +108,7 @@ export async function notifyParents(
   familyId: string,
   title: string,
   body: string,
-  type: string = 'mission_submitted',
+  type: NotificationType = 'mission_submitted',
   data?: Record<string, unknown>
 ) {
   const { data: parents } = await supabase
@@ -119,13 +121,13 @@ export async function notifyParents(
 
   for (const parent of parents) {
     // Create in-app notification
-    await (supabase.from('notifications') as any).insert({
+    await supabase.from('notifications').insert({
       recipient_id: parent.id,
       family_id: familyId,
       type,
       title,
       body,
-      data: data ?? {},
+      data: (data ?? {}) as Json,
     });
 
     // Send push notification if token exists
@@ -141,7 +143,7 @@ export async function notifyChild(
   familyId: string,
   title: string,
   body: string,
-  type: string,
+  type: NotificationType,
   data?: Record<string, unknown>
 ) {
   const { data: child } = await supabase
@@ -151,13 +153,13 @@ export async function notifyChild(
     .single() as { data: { expo_push_token: string | null } | null };
 
   // Create in-app notification
-  await (supabase.from('notifications') as any).insert({
+  await supabase.from('notifications').insert({
     recipient_id: childId,
     family_id: familyId,
     type,
     title,
     body,
-    data: data ?? {},
+    data: (data ?? {}) as Json,
   });
 
   // Send push if token exists

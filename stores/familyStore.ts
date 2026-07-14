@@ -41,8 +41,8 @@ export const useFamilyStore = create<FamilyState>((set) => ({
     // Generate a 6-char invite code
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
 
-    const { data, error } = await (supabase
-      .from('families') as any)
+    const { data, error } = await supabase
+      .from('families')
       .insert({ name, invite_code: code, created_by: userId })
       .select()
       .single();
@@ -52,8 +52,8 @@ export const useFamilyStore = create<FamilyState>((set) => ({
     const family = data as Family;
 
     // Update user's family_id
-    await (supabase
-      .from('profiles') as any)
+    await supabase
+      .from('profiles')
       .update({ family_id: family.id })
       .eq('id', userId);
 
@@ -64,7 +64,7 @@ export const useFamilyStore = create<FamilyState>((set) => ({
   joinFamily: async (inviteCode: string, userId: string) => {
     // Look up the family via a SECURITY DEFINER RPC: families are no longer
     // world-readable, so we resolve the exact code server-side.
-    const { data, error } = await (supabase.rpc as any)('get_family_by_invite_code', {
+    const { data, error } = await supabase.rpc('get_family_by_invite_code', {
       code: inviteCode.trim(),
     });
 
@@ -73,8 +73,8 @@ export const useFamilyStore = create<FamilyState>((set) => ({
     const family = data as Family;
 
     // Update user's family_id
-    const { error: updateError } = await (supabase
-      .from('profiles') as any)
+    const { error: updateError } = await supabase
+      .from('profiles')
       .update({ family_id: family.id })
       .eq('id', userId);
 
@@ -116,7 +116,7 @@ export const useFamilyStore = create<FamilyState>((set) => ({
       if (!data.user) throw new Error('Failed to create child account');
 
       // 3. Insert child profile with family_id already set
-      const { error: profileError } = await (supabase.from('profiles') as any)
+      const { error: profileError } = await supabase.from('profiles')
         .insert({
           id: data.user.id,
           email,

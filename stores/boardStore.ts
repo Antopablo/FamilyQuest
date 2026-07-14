@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '@/lib/supabase';
+import { Json } from '@/types/database';
 
 export interface BoardItemData {
   id: string;
@@ -29,14 +30,14 @@ export const useBoardStore = create<BoardState>((set) => ({
   loadBoard: async (childId: string) => {
     set({ loading: true, childId });
     try {
-      const { data, error } = await (supabase
-        .from('boards') as any)
+      const { data, error } = await supabase
+        .from('boards')
         .select('items')
         .eq('child_id', childId)
         .single();
 
       if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows
-      set({ items: (data?.items as BoardItemData[]) ?? [] });
+      set({ items: (data?.items as unknown as BoardItemData[]) ?? [] });
     } catch (e) {
       console.warn('[BoardStore] loadBoard error:', e);
       set({ items: [] });
@@ -47,8 +48,8 @@ export const useBoardStore = create<BoardState>((set) => ({
 
   saveBoard: async (childId: string, items: BoardItemData[]) => {
     set({ items });
-    const { error } = await (supabase.from('boards') as any).upsert(
-      { child_id: childId, items, updated_at: new Date().toISOString() },
+    const { error } = await supabase.from('boards').upsert(
+      { child_id: childId, items: items as unknown as Json, updated_at: new Date().toISOString() },
       { onConflict: 'child_id' }
     );
     if (error) console.warn('[BoardStore] saveBoard error:', error);

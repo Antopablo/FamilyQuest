@@ -16,7 +16,7 @@ export default function ParentSettingsScreen() {
   const toggleLanguage = async () => {
     const newLang = i18next.language === 'fr' ? 'en' : 'fr';
     i18next.changeLanguage(newLang);
-    await updateProfile({ locale: newLang } as any);
+    await updateProfile({ locale: newLang });
   };
 
   const handleLogout = () => {

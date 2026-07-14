@@ -70,7 +70,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         display_name: displayName,
         role,
       };
-      const { data: profileData, error: profileError } = await (supabase.from('profiles') as any)
+      const { data: profileData, error: profileError } = await supabase.from('profiles')
         .insert(insertData)
         .select();
       if (profileError) {
@@ -93,8 +93,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const { session } = get();
     if (!session) throw new Error('Not authenticated');
 
-    const { error } = await (supabase
-      .from('profiles') as any)
+    const { error } = await supabase
+      .from('profiles')
       .update({ role })
       .eq('id', session.user.id);
     if (error) throw error;
@@ -123,8 +123,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const { session } = get();
     if (!session) throw new Error('Not authenticated');
 
-    const { error } = await (supabase
-      .from('profiles') as any)
+    const { error } = await supabase
+      .from('profiles')
       .update(updates)
       .eq('id', session.user.id);
     if (error) throw error;

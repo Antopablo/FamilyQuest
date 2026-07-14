@@ -40,8 +40,8 @@ export default function ParentNotificationsScreen() {
 
   const markAllRead = async () => {
     if (!profile) return;
-    await (supabase
-      .from('notifications') as any)
+    await supabase
+      .from('notifications')
       .update({ read: true })
       .eq('recipient_id', profile.id)
       .eq('read', false);
