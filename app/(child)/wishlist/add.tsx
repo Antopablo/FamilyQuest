@@ -7,6 +7,7 @@ import { useGiftsStore } from '@/stores/giftsStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { COLORS, SPACING } from '@/lib/constants';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 
 export default function AddGiftScreen() {
   const { t } = useTranslation();
@@ -41,7 +42,9 @@ export default function AddGiftScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.screen}>
+      <ScreenHeader title={t('gifts.title')} />
+      <View style={styles.container}>
       <Input
         label={t('gifts.giftTitle')}
         value={title}
@@ -80,6 +83,7 @@ export default function AddGiftScreen() {
         disabled={!title}
         style={styles.button}
       />
+      </View>
     </View>
   );
 }
@@ -89,6 +93,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
     padding: SPACING.lg,
+  },
+  screen: {
+    flex: 1,
+    backgroundColor: COLORS.background,
   },
   button: {
     marginTop: SPACING.md,

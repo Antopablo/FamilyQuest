@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { ConfettiOverlay } from '@/components/ui/ConfettiOverlay';
 import { COLORS, SPACING, FONT_SIZES } from '@/lib/constants';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 
 export default function MissionDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -116,6 +117,7 @@ export default function MissionDetailScreen() {
 
   return (
     <View style={{ flex: 1 }}>
+      <ScreenHeader title={t('missions.title')} />
       <View style={styles.container}>
         <Card style={styles.card}>
           <View style={styles.header}>

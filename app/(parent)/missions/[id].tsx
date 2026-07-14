@@ -9,6 +9,7 @@ import { useFamilyStore } from '@/stores/familyStore';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Touchable } from '@/components/ui/Touchable';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { ConfettiOverlay } from '@/components/ui/ConfettiOverlay';
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from '@/lib/constants';
 import { MissionSubmission } from '@/types';
@@ -211,6 +212,7 @@ export default function ParentMissionDetailScreen() {
 
   return (
     <View style={{ flex: 1 }}>
+      <ScreenHeader title={t('missions.title')} />
       {content}
       <ConfettiOverlay visible={showConfetti} onDone={() => setShowConfetti(false)} />
     </View>

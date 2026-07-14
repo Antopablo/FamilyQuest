@@ -8,6 +8,7 @@ import { useGiftsStore } from '@/stores/giftsStore';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { COLORS, SPACING, FONT_SIZES } from '@/lib/constants';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 
 export default function GiftDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -71,7 +72,9 @@ export default function GiftDetailScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.screen}>
+      <ScreenHeader title={t('gifts.title')} />
+      <View style={styles.container}>
       <Card style={styles.card}>
         <Ionicons name="gift" size={48} color={COLORS.secondary} />
         <Text style={styles.title}>{gift.title}</Text>
@@ -122,6 +125,7 @@ export default function GiftDetailScreen() {
           style={styles.button}
         />
       )}
+      </View>
     </View>
   );
 }
@@ -131,6 +135,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
     padding: SPACING.lg,
+  },
+  screen: {
+    flex: 1,
+    backgroundColor: COLORS.background,
   },
   card: {
     alignItems: 'center',

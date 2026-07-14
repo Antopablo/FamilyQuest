@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import { Touchable } from '@/components/ui/Touchable';
 import { COLORS, SPACING, FONT_SIZES } from '@/lib/constants';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 
 export default function ParentGiftDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -112,7 +113,9 @@ export default function ParentGiftDetailScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.screen}>
+      <ScreenHeader title={t('gifts.title')} />
+      <View style={styles.container}>
       <Card style={styles.card}>
         <View style={styles.headerRow}>
           <Ionicons name="gift" size={48} color={COLORS.secondary} />
@@ -203,6 +206,7 @@ export default function ParentGiftDetailScreen() {
         </Card>
       )}
 
+      </View>
     </View>
   );
 }
@@ -212,6 +216,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.background,
     padding: SPACING.lg,
+  },
+  screen: {
+    flex: 1,
+    backgroundColor: COLORS.background,
   },
   card: {
     alignItems: 'center',
