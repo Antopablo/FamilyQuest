@@ -40,9 +40,9 @@ export default function ParentMissionDetailScreen() {
 
   const handleValidate = async (submissionId: string, status: 'approved' | 'rejected') => {
     if (!profile) return;
-    if (status === 'approved') setShowConfetti(true);
     try {
       await validateSubmission(submissionId, status, profile.id);
+      if (status === 'approved') setShowConfetti(true);
       if (profile.family_id) {
         await fetchSubmissions(profile.family_id);
         await fetchMembers(profile.family_id);
@@ -66,9 +66,9 @@ export default function ParentMissionDetailScreen() {
 
   const handleDirectValidate = async (childId: string) => {
     if (!profile?.family_id || !profile?.id || !mission) return;
-    setShowConfetti(true);
     try {
       await parentDirectValidate(mission.id, childId, profile.family_id, profile.id);
+      setShowConfetti(true);
       await fetchMembers(profile.family_id);
     } catch (error) {
       Alert.alert(t('common.error'), String(error));
