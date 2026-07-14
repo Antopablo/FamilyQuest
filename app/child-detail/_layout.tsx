@@ -13,7 +13,7 @@ export default function ChildDetailLayout() {
         title: '',
       }}
     >
-      <Stack.Screen name="[id]" />
+      <Stack.Screen name="[id]" options={{ headerShown: false }} />
       <Stack.Screen name="board" options={{ title: t('board.title') }} />
     </Stack>
   );
