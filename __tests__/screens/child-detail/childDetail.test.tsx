@@ -5,6 +5,7 @@ import ChildDetailScreen from '@/app/child-detail/[id]';
 
 const mockRemoveChild = jest.fn();
 const mockUpdateChildPassword = jest.fn();
+const mockFetchGifts = jest.fn();
 const mockBack = jest.fn();
 const mockPush = jest.fn();
 let mockMembers: any[];
@@ -37,7 +38,7 @@ jest.mock('@/stores/giftsStore', () => ({
   useGiftsStore: (selector: any) => {
     const state = {
       gifts: mockGifts,
-      fetchGifts: jest.fn(),
+      fetchGifts: mockFetchGifts,
     };
     return selector ? selector(state) : state;
   },

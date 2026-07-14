@@ -47,7 +47,7 @@ export default function ChildDetailScreen() {
     if (profile?.family_id) {
       fetchGifts(profile.family_id);
     }
-  }, [id]);
+  }, [id, profile?.family_id, fetchGifts]);
 
   if (!child) return null;
 
