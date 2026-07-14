@@ -187,19 +187,26 @@ export default function ChildDetailScreen() {
 
         <Text style={styles.sectionTitle}>{t('dashboard.recentActivity')}</Text>
         {transactions.length > 0 ? (
-          transactions.slice(0, 6).map((item) => (
-            <View key={item.id} style={styles.txRow}>
-              <Ionicons
-                name={item.amount > 0 ? 'arrow-up-circle' : 'arrow-down-circle'}
-                size={20}
-                color={item.amount > 0 ? COLORS.success : COLORS.error}
-              />
-              <Text style={styles.txDesc} numberOfLines={1}>{item.description}</Text>
-              <Text style={[styles.txAmount, { color: item.amount > 0 ? COLORS.success : COLORS.error }]}>
-                {item.amount > 0 ? '+' : ''}{item.amount}
-              </Text>
-            </View>
-          ))
+          <ScrollView
+            style={styles.activityScroll}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator
+            persistentScrollbar
+          >
+            {transactions.map((item) => (
+              <View key={item.id} style={styles.txRow}>
+                <Ionicons
+                  name={item.amount > 0 ? 'arrow-up-circle' : 'arrow-down-circle'}
+                  size={20}
+                  color={item.amount > 0 ? COLORS.success : COLORS.error}
+                />
+                <Text style={styles.txDesc} numberOfLines={1}>{item.description}</Text>
+                <Text style={[styles.txAmount, { color: item.amount > 0 ? COLORS.success : COLORS.error }]}>
+                  {item.amount > 0 ? '+' : ''}{item.amount}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
         ) : (
           <Text style={styles.emptyText}>{t('history.noHistory')}</Text>
         )}
@@ -381,6 +388,9 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.xs,
     color: COLORS.textSecondary,
     marginTop: 2,
+  },
+  activityScroll: {
+    maxHeight: 260,
   },
   txRow: {
     flexDirection: 'row',
