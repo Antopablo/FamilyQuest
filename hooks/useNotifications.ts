@@ -21,6 +21,7 @@ export function useNotifications() {
     } catch {
       return;
     }
+    if (!Notifications) return;
 
     // Register for push notifications
     const register = async () => {

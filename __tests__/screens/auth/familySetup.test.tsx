@@ -105,7 +105,7 @@ describe('FamilySetupScreen', () => {
     fireEvent.press(screen.getByText('common.confirm'));
 
     await waitFor(() => {
-      expect(alertSpy).toHaveBeenCalledWith('Erreur creation famille', 'Create error');
+      expect(alertSpy).toHaveBeenCalledWith('common.error', 'Create error');
     });
   });
 });

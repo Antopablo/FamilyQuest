@@ -11,8 +11,9 @@ const isExpoGo = Constants.appOwnership === 'expo';
 let Notifications: typeof import('expo-notifications') | null = null;
 if (!isExpoGo) {
   try {
-    Notifications = require('expo-notifications');
-    Notifications.setNotificationHandler({
+    const mod: typeof import('expo-notifications') = require('expo-notifications');
+    Notifications = mod;
+    mod.setNotificationHandler({
       handleNotification: async () => ({
         shouldShowAlert: true,
         shouldShowBanner: true,

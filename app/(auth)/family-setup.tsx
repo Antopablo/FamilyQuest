@@ -25,7 +25,7 @@ export default function FamilySetupScreen() {
       await fetchProfile();
       const updatedProfile = useAuthStore.getState().profile;
       if (!updatedProfile) {
-        Alert.alert('Debug', 'profile toujours null apres fetchProfile. Vérifie que la table profiles existe dans Supabase.');
+        Alert.alert(t('common.error'));
         return;
       }
     }
@@ -36,7 +36,7 @@ export default function FamilySetupScreen() {
       await fetchProfile();
     } catch (error: any) {
       const msg = error?.message || error?.details || JSON.stringify(error);
-      Alert.alert('Erreur creation famille', msg);
+      Alert.alert(t('common.error'), msg);
     } finally {
       setLoading(false);
     }

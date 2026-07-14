@@ -2,6 +2,9 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import { Input } from '@/components/ui/Input';
 
+/** Minimal shape of a react-test-renderer node used by the findAll predicates. */
+type TestNode = { type: unknown; props: { name?: string } };
+
 describe('Input', () => {
   it('renders with a label', () => {
     render(<Input label="Email" />);
@@ -49,7 +52,7 @@ describe('Input', () => {
     // Use getAllByRole or find by the Ionicons text since it's mocked as a string component
     // fireEvent.press on the Ionicons element bubbles up to the Pressable
     const icons = screen.root.findAll(
-      (node) => node.type === 'Ionicons' && (node.props.name === 'eye-off-outline' || node.props.name === 'eye-outline')
+      (node: TestNode) => node.type === 'Ionicons' && (node.props.name === 'eye-off-outline' || node.props.name === 'eye-outline')
     );
     expect(icons.length).toBe(1);
 
@@ -61,7 +64,7 @@ describe('Input', () => {
 
     // Find the updated icon (should now be eye-outline)
     const iconsAfter = screen.root.findAll(
-      (node) => node.type === 'Ionicons' && node.props.name === 'eye-outline'
+      (node: TestNode) => node.type === 'Ionicons' && node.props.name === 'eye-outline'
     );
     expect(iconsAfter.length).toBe(1);
 
