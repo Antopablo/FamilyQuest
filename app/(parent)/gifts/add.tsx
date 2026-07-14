@@ -11,6 +11,7 @@ import { Card } from '@/components/ui/Card';
 import { Ionicons } from '@expo/vector-icons';
 import { Touchable } from '@/components/ui/Touchable';
 import { COLORS, SPACING, FONT_SIZES } from '@/lib/constants';
+import { giftInputSchema, validationErrorKey } from '@/lib/validation';
 
 export default function ParentAddGiftScreen() {
   const { t } = useTranslation();
@@ -48,18 +49,23 @@ export default function ParentAddGiftScreen() {
   const hasSelection = targetChildIds.length > 0;
 
   const handleAdd = async () => {
-    if (!title || !hasSelection || !profile?.family_id || !pointsCost) return;
+    if (!hasSelection || !profile?.family_id) return;
+    const validation = giftInputSchema.safeParse({ title, points_cost: pointsCost, image_url: imageUrl, link_url: linkUrl });
+    if (!validation.success) {
+      Alert.alert(t('common.error'), t(validationErrorKey(validation.error)));
+      return;
+    }
     setLoading(true);
     try {
       for (const childId of targetChildIds) {
         await addGift({
           family_id: profile.family_id,
           child_id: childId,
-          title,
+          title: validation.data.title,
           description: description || undefined,
           image_url: imageUrl || undefined,
           link_url: linkUrl || undefined,
-          points_cost: parseInt(pointsCost, 10),
+          points_cost: validation.data.points_cost,
           status: 'approved',
           approved_by: profile.id,
         });

@@ -1,4 +1,10 @@
 {
+  "validation": {
+    "invalidPoints": "Points must be a positive whole number.",
+    "invalidUrl": "The link must be a valid URL (http/https).",
+    "titleRequired": "A title is required.",
+    "invalidInput": "Invalid input."
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",

@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/Input';
 import { Touchable } from '@/components/ui/Touchable';
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from '@/lib/constants';
 import { MissionRecurrence } from '@/types';
+import { missionInputSchema, validationErrorKey } from '@/lib/validation';
 
 export default function CreateMissionScreen() {
   const { t } = useTranslation();
@@ -35,15 +36,20 @@ export default function CreateMissionScreen() {
   ];
 
   const handleCreate = async () => {
-    if (!title || !points || !profile?.family_id) return;
+    if (!profile?.family_id) return;
+    const validation = missionInputSchema.safeParse({ title, points_reward: points });
+    if (!validation.success) {
+      Alert.alert(t('common.error'), t(validationErrorKey(validation.error)));
+      return;
+    }
     setLoading(true);
     try {
       const missionId = await createMission({
         family_id: profile.family_id,
         created_by: profile.id,
-        title,
+        title: validation.data.title,
         description: description || null,
-        points_reward: parseInt(points, 10),
+        points_reward: validation.data.points_reward,
         recurrence,
       });
 

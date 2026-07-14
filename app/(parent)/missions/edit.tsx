@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/Input';
 import { Touchable } from '@/components/ui/Touchable';
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from '@/lib/constants';
 import { MissionRecurrence } from '@/types';
+import { missionInputSchema, validationErrorKey } from '@/lib/validation';
 
 export default function EditMissionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -32,13 +33,17 @@ export default function EditMissionScreen() {
   if (!mission) return null;
 
   const handleSave = async () => {
-    if (!title || !points) return;
+    const validation = missionInputSchema.safeParse({ title, points_reward: points });
+    if (!validation.success) {
+      Alert.alert(t('common.error'), t(validationErrorKey(validation.error)));
+      return;
+    }
     setLoading(true);
     try {
       await updateMission(mission.id, {
-        title,
+        title: validation.data.title,
         description: description || null,
-        points_reward: parseInt(points, 10),
+        points_reward: validation.data.points_reward,
         recurrence,
       });
       router.dismiss();

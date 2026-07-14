@@ -6,6 +6,7 @@ import { useGiftsStore } from '@/stores/giftsStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { COLORS, SPACING } from '@/lib/constants';
+import { giftEditSchema, validationErrorKey } from '@/lib/validation';
 
 export default function EditGiftScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,15 +26,19 @@ export default function EditGiftScreen() {
   if (!gift) return null;
 
   const handleSave = async () => {
-    if (!title) return;
+    const validation = giftEditSchema.safeParse({ title, points_cost: pointsCost, image_url: imageUrl, link_url: linkUrl });
+    if (!validation.success) {
+      Alert.alert(t('common.error'), t(validationErrorKey(validation.error)));
+      return;
+    }
     setLoading(true);
     try {
       await updateGift(gift.id, {
-        title,
+        title: validation.data.title,
         description: description || null,
         image_url: imageUrl || null,
         link_url: linkUrl || null,
-        points_cost: pointsCost ? parseInt(pointsCost, 10) : null,
+        points_cost: validation.data.points_cost === '' ? null : validation.data.points_cost,
       });
       router.dismiss();
     } catch (error) {
