@@ -62,12 +62,11 @@ export const useFamilyStore = create<FamilyState>((set) => ({
   },
 
   joinFamily: async (inviteCode: string, userId: string) => {
-    // Find family by invite code
-    const { data, error } = await supabase
-      .from('families')
-      .select('*')
-      .eq('invite_code', inviteCode.toUpperCase())
-      .single();
+    // Look up the family via a SECURITY DEFINER RPC: families are no longer
+    // world-readable, so we resolve the exact code server-side.
+    const { data, error } = await (supabase.rpc as any)('get_family_by_invite_code', {
+      code: inviteCode.trim(),
+    });
 
     if (error || !data) throw new Error('Invalid invite code');
 

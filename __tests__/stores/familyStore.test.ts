@@ -94,30 +94,20 @@ describe('familyStore', () => {
   describe('joinFamily', () => {
     it('joins family by invite code', async () => {
       const familyData = { id: 'fam-1', name: 'Dupont', invite_code: 'ABC123' };
-      const selectChain = {
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockReturnThis(),
-        single: jest.fn().mockResolvedValue({ data: familyData, error: null }),
-      };
+      (supabase.rpc as jest.Mock).mockResolvedValueOnce({ data: familyData, error: null });
       const updateChain = {
         update: jest.fn().mockReturnThis(),
         eq: jest.fn().mockResolvedValue({ error: null }),
       };
-      (supabase.from as jest.Mock)
-        .mockReturnValueOnce(selectChain)  // families select
-        .mockReturnValueOnce(updateChain); // profiles update
+      (supabase.from as jest.Mock).mockReturnValueOnce(updateChain); // profiles update
 
       await useFamilyStore.getState().joinFamily('abc123', 'user-1');
+      expect(supabase.rpc).toHaveBeenCalledWith('get_family_by_invite_code', { code: 'abc123' });
       expect(useFamilyStore.getState().family).toEqual(familyData);
     });
 
     it('throws on invalid invite code', async () => {
-      const selectChain = {
-        select: jest.fn().mockReturnThis(),
-        eq: jest.fn().mockReturnThis(),
-        single: jest.fn().mockResolvedValue({ data: null, error: new Error('Not found') }),
-      };
-      (supabase.from as jest.Mock).mockReturnValue(selectChain);
+      (supabase.rpc as jest.Mock).mockResolvedValueOnce({ data: null, error: new Error('Not found') });
 
       await expect(useFamilyStore.getState().joinFamily('BADCOD', 'user-1')).rejects.toThrow('Invalid invite code');
     });
