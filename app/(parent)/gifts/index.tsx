@@ -38,13 +38,6 @@ export default function ParentGiftsScreen() {
     }
   }, [familyId]);
 
-  // Expand every child section by default once the members are loaded.
-  useEffect(() => {
-    if (childMembers.length > 0) {
-      setExpandedIds((prev) => (prev.length ? prev : childMembers.map((c) => c.id)));
-    }
-  }, [childMembers.length]);
-
   const onRefresh = async () => {
     setRefreshing(true);
     if (familyId) {

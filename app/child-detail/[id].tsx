@@ -157,7 +157,7 @@ export default function ChildDetailScreen() {
         </View>
       </LinearGradient>
 
-      <ScrollView contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
+      <View style={styles.body}>
         <Text style={styles.sectionTitle}>{t('dashboard.requestedWishes')}</Text>
         {childGifts.length > 0 ? (
           <ScrollView
@@ -186,30 +186,31 @@ export default function ChildDetailScreen() {
         )}
 
         <Text style={styles.sectionTitle}>{t('dashboard.recentActivity')}</Text>
-        {transactions.length > 0 ? (
-          <ScrollView
-            style={styles.activityScroll}
-            nestedScrollEnabled
-            showsVerticalScrollIndicator
-            persistentScrollbar
-          >
-            {transactions.map((item) => (
-              <View key={item.id} style={styles.txRow}>
-                <Ionicons
-                  name={item.amount > 0 ? 'arrow-up-circle' : 'arrow-down-circle'}
-                  size={20}
-                  color={item.amount > 0 ? COLORS.success : COLORS.error}
-                />
-                <Text style={styles.txDesc} numberOfLines={1}>{item.description}</Text>
-                <Text style={[styles.txAmount, { color: item.amount > 0 ? COLORS.success : COLORS.error }]}>
-                  {item.amount > 0 ? '+' : ''}{item.amount}
-                </Text>
-              </View>
-            ))}
-          </ScrollView>
-        ) : (
-          <Text style={styles.emptyText}>{t('history.noHistory')}</Text>
-        )}
+        <View style={styles.activityContainer}>
+          {transactions.length > 0 ? (
+            <ScrollView
+              style={styles.activityScroll}
+              showsVerticalScrollIndicator
+              persistentScrollbar
+            >
+              {transactions.map((item) => (
+                <View key={item.id} style={styles.txRow}>
+                  <Ionicons
+                    name={item.amount > 0 ? 'arrow-up-circle' : 'arrow-down-circle'}
+                    size={20}
+                    color={item.amount > 0 ? COLORS.success : COLORS.error}
+                  />
+                  <Text style={styles.txDesc} numberOfLines={1}>{item.description}</Text>
+                  <Text style={[styles.txAmount, { color: item.amount > 0 ? COLORS.success : COLORS.error }]}>
+                    {item.amount > 0 ? '+' : ''}{item.amount}
+                  </Text>
+                </View>
+              ))}
+            </ScrollView>
+          ) : (
+            <Text style={styles.emptyText}>{t('history.noHistory')}</Text>
+          )}
+        </View>
 
         <Touchable onPress={() => router.push(`/child-detail/board?childId=${id}`)}>
           <LinearGradient
@@ -225,7 +226,7 @@ export default function ChildDetailScreen() {
             <Ionicons name="chevron-forward" size={18} color="rgba(255,255,255,0.8)" />
           </LinearGradient>
         </Touchable>
-      </ScrollView>
+      </View>
 
       <Modal
         visible={showManagement}
@@ -350,6 +351,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   body: {
+    flex: 1,
     padding: SPACING.lg,
   },
   sectionTitle: {
@@ -389,8 +391,11 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     marginTop: 2,
   },
+  activityContainer: {
+    flex: 1,
+  },
   activityScroll: {
-    maxHeight: 260,
+    flex: 1,
   },
   txRow: {
     flexDirection: 'row',
