@@ -20,6 +20,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useGiftsStore } from '@/stores/giftsStore';
 import { supabase } from '@/lib/supabase';
 import { Card } from '@/components/ui/Card';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Touchable } from '@/components/ui/Touchable';
@@ -35,6 +36,8 @@ export default function ChildDetailScreen() {
   const { gifts, fetchGifts } = useGiftsStore();
   const profile = useAuthStore((s) => s.profile);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loadingTx, setLoadingTx] = useState(true);
+  const [giftsChecked, setGiftsChecked] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [changingPassword, setChangingPassword] = useState(false);
@@ -45,18 +48,28 @@ export default function ChildDetailScreen() {
 
   useEffect(() => {
     const fetchTransactions = async () => {
-      const { data } = await supabase
-        .from('transactions')
-        .select('*')
-        .eq('child_id', id)
-        .order('created_at', { ascending: false })
-        .limit(20);
-      setTransactions((data as Transaction[]) ?? []);
+      setLoadingTx(true);
+      try {
+        const { data } = await supabase
+          .from('transactions')
+          .select('*')
+          .eq('child_id', id)
+          .order('created_at', { ascending: false })
+          .limit(20);
+        setTransactions((data as Transaction[]) ?? []);
+      } finally {
+        setLoadingTx(false);
+      }
     };
     fetchTransactions();
-    if (profile?.family_id) {
-      fetchGifts(profile.family_id);
-    }
+    const loadGifts = async () => {
+      setGiftsChecked(false);
+      if (profile?.family_id) {
+        await fetchGifts(profile.family_id);
+      }
+      setGiftsChecked(true);
+    };
+    loadGifts();
   }, [id, profile?.family_id, fetchGifts]);
 
   if (!child) return null;
@@ -159,7 +172,17 @@ export default function ChildDetailScreen() {
 
       <View style={styles.body}>
         <Text style={styles.sectionTitle}>{t('dashboard.requestedWishes')}</Text>
-        {childGifts.length > 0 ? (
+        {!giftsChecked && childGifts.length === 0 ? (
+          <View style={styles.skelWishRow}>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Card key={i} style={styles.wishCard}>
+                <Skeleton width={56} height={16} borderRadius={BORDER_RADIUS.full} style={styles.skelBadge} />
+                <Skeleton width="90%" height={12} style={styles.skelLine} />
+                <Skeleton width={40} height={10} />
+              </Card>
+            ))}
+          </View>
+        ) : childGifts.length > 0 ? (
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -187,7 +210,19 @@ export default function ChildDetailScreen() {
 
         <Text style={styles.sectionTitle}>{t('dashboard.recentActivity')}</Text>
         <View style={styles.activityContainer}>
-          {transactions.length > 0 ? (
+          {loadingTx ? (
+            <View>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <View key={i} style={styles.txRow}>
+                  <Skeleton width={20} height={20} borderRadius={10} />
+                  <View style={styles.skelDesc}>
+                    <Skeleton width={i % 2 === 0 ? '70%' : '45%'} height={12} />
+                  </View>
+                  <Skeleton width={28} height={12} />
+                </View>
+              ))}
+            </View>
+          ) : transactions.length > 0 ? (
             <ScrollView
               style={styles.activityScroll}
               showsVerticalScrollIndicator
@@ -392,6 +427,19 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   activityContainer: {
+    flex: 1,
+  },
+  skelWishRow: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+  },
+  skelBadge: {
+    marginBottom: SPACING.xs,
+  },
+  skelLine: {
+    marginBottom: 6,
+  },
+  skelDesc: {
     flex: 1,
   },
   activityScroll: {
