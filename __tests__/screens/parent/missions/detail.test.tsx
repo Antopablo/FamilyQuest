@@ -18,6 +18,7 @@ let mockMembers: any[];
 jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 'm-1' }),
   useRouter: () => ({ push: jest.fn(), replace: jest.fn(), back: jest.fn() }),
+  useNavigation: () => ({ getParent: () => ({ setOptions: jest.fn() }) }),
 }));
 
 jest.mock('@/stores/authStore', () => ({

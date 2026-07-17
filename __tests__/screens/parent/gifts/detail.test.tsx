@@ -8,6 +8,7 @@ const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 'g-1' }),
   useRouter: () => ({ push: mockPush, replace: jest.fn(), back: jest.fn() }),
+  useNavigation: () => ({ getParent: () => ({ setOptions: jest.fn() }) }),
 }));
 
 const mockApproveGift = jest.fn();

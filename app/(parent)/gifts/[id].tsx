@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, Alert, Linking } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '@/stores/authStore';
@@ -17,12 +17,22 @@ export default function ParentGiftDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
   const router = useRouter();
+  const navigation = useNavigation();
   const profile = useAuthStore((s) => s.profile);
   const { gifts, approveGift, rejectGift, redeemGift, deleteGift } = useGiftsStore();
   const { members, fetchMembers } = useFamilyStore();
 
   const [pointsCost, setPointsCost] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // On this detail screen, hide the parent tab's native header so the only header
+  // is the ScreenHeader (with back arrow). Restored on leave so the gifts list
+  // keeps its native tab header (like "Ma famille").
+  useLayoutEffect(() => {
+    const parent = navigation.getParent();
+    parent?.setOptions({ headerShown: false });
+    return () => parent?.setOptions({ headerShown: true });
+  }, [navigation]);
 
   const gift = gifts.find((g) => g.id === id);
   const childMember = gift ? members.find((m) => m.id === gift.child_id) : undefined;
