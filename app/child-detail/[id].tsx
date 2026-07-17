@@ -244,7 +244,7 @@ export default function ChildDetailScreen() {
               ))}
             </ScrollView>
           ) : (
-            <Text style={styles.emptyText}>{t('history.noHistory')}</Text>
+            <Text style={styles.emptyText}>{t('history.noTransactions')}</Text>
           )}
         </View>
 
