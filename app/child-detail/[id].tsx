@@ -186,6 +186,7 @@ export default function ChildDetailScreen() {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
+            style={styles.wishScroll}
             contentContainerStyle={styles.hScroll}
           >
             {childGifts.map((item) => (
@@ -400,6 +401,9 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
     paddingBottom: SPACING.xs,
     paddingRight: SPACING.lg,
+  },
+  wishScroll: {
+    flexGrow: 0,
   },
   wishCard: {
     width: 140,
