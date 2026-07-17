@@ -7,6 +7,7 @@ jest.mock('expo-router', () => ({
     navigate: jest.fn(),
   }),
   useLocalSearchParams: () => ({}),
+  useFocusEffect: () => {},
   useSegments: () => [],
   useRootNavigationState: () => ({ key: 'test' }),
   Link: 'Link',

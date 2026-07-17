@@ -12,10 +12,12 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { Touchable } from '@/components/ui/Touchable';
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from '@/lib/constants';
 import { Mission } from '@/types';
+import { useScrollToTopOnFocus } from '@/hooks/useScrollToTopOnFocus';
 
 export default function ParentMissionsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  const listRef = useScrollToTopOnFocus<FlatList<Mission>>();
   const profile = useAuthStore((s) => s.profile);
   const { missions, submissions, loading, fetchMissions, fetchSubmissions } = useMissionsStore();
   const { members } = useFamilyStore();
@@ -92,6 +94,7 @@ export default function ParentMissionsScreen() {
   return (
     <View style={styles.container}>
       <FlatList
+        ref={listRef}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         data={filteredMissions}

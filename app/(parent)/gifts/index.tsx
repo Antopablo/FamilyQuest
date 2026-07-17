@@ -11,10 +11,13 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { Touchable } from '@/components/ui/Touchable';
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from '@/lib/constants';
 import { Gift } from '@/types';
+import { useScrollToTopOnFocus } from '@/hooks/useScrollToTopOnFocus';
 
 export default function ParentGiftsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  const scrollRef = useScrollToTopOnFocus<ScrollView>();
+  const listRef = useScrollToTopOnFocus<FlatList<Gift>>();
   const profile = useAuthStore((s) => s.profile);
   const { gifts, loading, fetchGifts } = useGiftsStore();
   const members = useFamilyStore((s) => s.members);
@@ -105,6 +108,7 @@ export default function ParentGiftsScreen() {
     <View style={styles.wrapper}>
       {multiChild ? (
         <ScrollView
+          ref={scrollRef}
           style={styles.container}
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
@@ -151,6 +155,7 @@ export default function ParentGiftsScreen() {
         </ScrollView>
       ) : (
         <FlatList
+          ref={listRef}
           style={styles.container}
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}

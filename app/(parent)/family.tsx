@@ -8,6 +8,7 @@ import { useRouter } from 'expo-router';
 import { Card } from '@/components/ui/Card';
 import { Touchable } from '@/components/ui/Touchable';
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from '@/lib/constants';
+import { useScrollToTopOnFocus } from '@/hooks/useScrollToTopOnFocus';
 
 const CHILD_COLORS = ['#6C63FF', '#FF6584', '#4CAF50', '#FF9800', '#00BCD4', '#9C27B0'];
 
@@ -16,6 +17,7 @@ export default function FamilyScreen() {
   const profile = useAuthStore((s) => s.profile);
   const { family, members, fetchFamily, fetchMembers } = useFamilyStore();
   const router = useRouter();
+  const scrollRef = useScrollToTopOnFocus<ScrollView>();
   const [refreshing, setRefreshing] = useState(false);
 
   const familyId = profile?.family_id;
@@ -38,6 +40,7 @@ export default function FamilyScreen() {
   return (
     <View style={styles.wrapper}>
       <ScrollView
+        ref={scrollRef}
         style={styles.container}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}

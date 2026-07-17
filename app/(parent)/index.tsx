@@ -13,6 +13,7 @@ import { Card } from '@/components/ui/Card';
 import { Touchable } from '@/components/ui/Touchable';
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from '@/lib/constants';
 import { Profile } from '@/types';
+import { useScrollToTopOnFocus } from '@/hooks/useScrollToTopOnFocus';
 
 const CHILD_COLORS = ['#6C63FF', '#FF6584', '#4CAF50', '#FF9800', '#00BCD4', '#9C27B0'];
 
@@ -20,6 +21,7 @@ export default function ParentDashboard() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const scrollRef = useScrollToTopOnFocus<ScrollView>();
   const profile = useAuthStore((s) => s.profile);
   const { family, members, fetchFamily, fetchMembers } = useFamilyStore();
   const { missions, submissions, fetchMissions, fetchSubmissions } = useMissionsStore();
@@ -59,6 +61,7 @@ export default function ParentDashboard() {
 
   return (
     <ScrollView
+      ref={scrollRef}
       style={styles.container}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
