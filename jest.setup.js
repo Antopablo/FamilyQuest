@@ -14,6 +14,15 @@ jest.mock('expo-router', () => ({
   Redirect: 'Redirect',
 }));
 
+// Mock expo-haptics
+jest.mock('expo-haptics', () => ({
+  notificationAsync: jest.fn(() => Promise.resolve()),
+  impactAsync: jest.fn(() => Promise.resolve()),
+  selectionAsync: jest.fn(() => Promise.resolve()),
+  NotificationFeedbackType: { Success: 'success', Warning: 'warning', Error: 'error' },
+  ImpactFeedbackStyle: { Light: 'light', Medium: 'medium', Heavy: 'heavy' },
+}));
+
 // Mock expo-linear-gradient
 jest.mock('expo-linear-gradient', () => ({
   LinearGradient: 'LinearGradient',
@@ -195,9 +204,13 @@ jest.mock('react-native-reanimated', () => {
       out: () => ({}),
       in: () => ({}),
       inOut: () => ({}),
+      back: () => ({}),
+      elastic: () => ({}),
       ease: {},
       cubic: {},
       linear: {},
+      quad: {},
+      sin: {},
     },
   };
 });

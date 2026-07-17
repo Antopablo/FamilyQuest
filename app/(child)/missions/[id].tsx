@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -63,11 +63,11 @@ export default function MissionDetailScreen() {
     }
   };
 
-  const handleConfettiDone = () => {
+  const handleConfettiDone = useCallback(() => {
     setShowConfetti(false);
     Alert.alert(t('missions.submit'), t('missions.submitted'));
     router.back();
-  };
+  }, [router, t]);
 
   const renderActions = () => {
     if (hasPendingSubmission) {

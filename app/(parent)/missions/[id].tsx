@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Alert } from 'react-native';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +26,7 @@ export default function ParentMissionDetailScreen() {
 
   const [assignLoading, setAssignLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const handleConfettiDone = useCallback(() => setShowConfetti(false), []);
 
   // On this detail screen, hide the parent tab's native "Missions" header so the
   // only header is the ScreenHeader (with the back arrow). Restored on leave, so
@@ -224,7 +225,7 @@ export default function ParentMissionDetailScreen() {
     <View style={{ flex: 1 }}>
       <ScreenHeader title={t('missions.title')} />
       {content}
-      <ConfettiOverlay visible={showConfetti} onDone={() => setShowConfetti(false)} />
+      <ConfettiOverlay visible={showConfetti} onDone={handleConfettiDone} />
     </View>
   );
 }
