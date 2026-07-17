@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useFamilyStore } from '@/stores/familyStore';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { COLORS, SPACING, FONT_SIZES } from '@/lib/constants';
 
 export default function ParentSettingsScreen() {
@@ -27,7 +28,9 @@ export default function ParentSettingsScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.screen}>
+      <ScreenHeader title={t('settings.title')} />
+      <View style={styles.container}>
       <Card style={styles.card}>
         <Text style={styles.label}>{t('settings.profile')}</Text>
         <Text style={styles.value}>{profile?.display_name}</Text>
@@ -58,11 +61,16 @@ export default function ParentSettingsScreen() {
         variant="danger"
         style={styles.logoutButton}
       />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
