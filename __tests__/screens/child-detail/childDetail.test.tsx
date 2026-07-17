@@ -113,7 +113,7 @@ describe('ChildDetailScreen', () => {
   it('renders management toggle button', async () => {
     render(<ChildDetailScreen />);
     await waitFor(() => {
-      expect(screen.getByText('family.management')).toBeTruthy();
+      expect(screen.getByLabelText('family.management')).toBeTruthy();
     });
   });
 
@@ -214,9 +214,9 @@ describe('ChildDetailScreen', () => {
   it('opens management modal and shows controls', async () => {
     render(<ChildDetailScreen />);
     await waitFor(() => {
-      expect(screen.getByText('family.management')).toBeTruthy();
+      expect(screen.getByLabelText('family.management')).toBeTruthy();
     });
-    fireEvent.press(screen.getByText('family.management'));
+    fireEvent.press(screen.getByLabelText('family.management'));
     expect(screen.getAllByText('family.changePassword').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('family.removeChild')).toBeTruthy();
     expect(screen.getByText('family.newPassword')).toBeTruthy();
@@ -230,9 +230,9 @@ describe('ChildDetailScreen', () => {
     render(<ChildDetailScreen />);
 
     await waitFor(() => {
-      expect(screen.getByText('family.management')).toBeTruthy();
+      expect(screen.getByLabelText('family.management')).toBeTruthy();
     });
-    fireEvent.press(screen.getByText('family.management'));
+    fireEvent.press(screen.getByLabelText('family.management'));
 
     const inputs = screen.UNSAFE_getAllByType(TextInput);
     fireEvent.changeText(inputs[0], 'newpass123');
@@ -254,9 +254,9 @@ describe('ChildDetailScreen', () => {
     render(<ChildDetailScreen />);
 
     await waitFor(() => {
-      expect(screen.getByText('family.management')).toBeTruthy();
+      expect(screen.getByLabelText('family.management')).toBeTruthy();
     });
-    fireEvent.press(screen.getByText('family.management'));
+    fireEvent.press(screen.getByLabelText('family.management'));
 
     const inputs = screen.UNSAFE_getAllByType(TextInput);
     fireEvent.changeText(inputs[0], '123456');
@@ -276,9 +276,9 @@ describe('ChildDetailScreen', () => {
     render(<ChildDetailScreen />);
 
     await waitFor(() => {
-      expect(screen.getByText('family.management')).toBeTruthy();
+      expect(screen.getByLabelText('family.management')).toBeTruthy();
     });
-    fireEvent.press(screen.getByText('family.management'));
+    fireEvent.press(screen.getByLabelText('family.management'));
     fireEvent.press(screen.getByText('family.removeChild'));
 
     expect(alertSpy).toHaveBeenCalledWith(
@@ -294,9 +294,9 @@ describe('ChildDetailScreen', () => {
     render(<ChildDetailScreen />);
 
     await waitFor(() => {
-      expect(screen.getByText('family.management')).toBeTruthy();
+      expect(screen.getByLabelText('family.management')).toBeTruthy();
     });
-    fireEvent.press(screen.getByText('family.management'));
+    fireEvent.press(screen.getByLabelText('family.management'));
     fireEvent.press(screen.getByText('family.removeChild'));
 
     // Extract the destructive button callback
@@ -317,9 +317,9 @@ describe('ChildDetailScreen', () => {
     render(<ChildDetailScreen />);
 
     await waitFor(() => {
-      expect(screen.getByText('family.management')).toBeTruthy();
+      expect(screen.getByLabelText('family.management')).toBeTruthy();
     });
-    fireEvent.press(screen.getByText('family.management'));
+    fireEvent.press(screen.getByLabelText('family.management'));
     fireEvent.press(screen.getByText('family.removeChild'));
 
     // Extract and call the destructive button

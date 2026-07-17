@@ -148,7 +148,7 @@ export default function ChildDetailScreen() {
             accessibilityLabel={t('family.management')}
           >
             <Ionicons name="settings-outline" size={16} color="#fff" />
-            <Text style={styles.manageText}>{t('family.management')}</Text>
+            {/* <Text style={styles.manageText}>{t('family.management')}</Text> */}
           </Touchable>
         </View>
 
