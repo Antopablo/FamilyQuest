@@ -53,10 +53,11 @@ export default function MissionDetailScreen() {
   const handleComplete = async () => {
     if (!profile?.family_id || !claimedSubmission) return;
     setLoading(true);
+    setShowConfetti(true);
     try {
       await completeClaim(claimedSubmission.id, profile.family_id, note || undefined);
-      setShowConfetti(true);
     } catch (error: any) {
+      setShowConfetti(false);
       Alert.alert(t('common.error'), error?.message || JSON.stringify(error));
     } finally {
       setLoading(false);
@@ -99,7 +100,6 @@ export default function MissionDetailScreen() {
               title={t('missions.complete')}
               onPress={handleComplete}
               loading={loading}
-              celebrate
             />
           </View>
         </View>

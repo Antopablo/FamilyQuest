@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { StyleSheet, Dimensions, View, Text } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, Dimensions, View, Text, Vibration } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -19,9 +19,12 @@ const BURST_COUNT = 24;
 const PALETTE = ['#6C63FF', '#FF6584', '#4CAF50', '#FF9800', '#F44336', '#FFD700', '#00BCD4', '#FF4081', '#FFFFFF'];
 const EMOJIS = ['🎉', '🏆', '⭐', '🎊'];
 
-/** One short, celebratory haptic (a single call so it never janks the animation). */
+/** A big, celebratory buzz fired on click. A single Taptic call (iOS refinement)
+ *  + one native Vibration pattern (strong rhythmic buzz) — no JS timers, so it
+ *  never janks the animation. */
 function fireHaptics() {
   Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+  Vibration.vibrate([0, 90, 60, 160, 60, 300]);
 }
 
 interface Burst {
@@ -229,13 +232,23 @@ export const ConfettiOverlay = React.memo(function ConfettiOverlay({ visible, on
     []
   );
   const emoji = useMemo(() => EMOJIS[Math.floor(Math.random() * EMOJIS.length)], []);
+  const [particlesReady, setParticlesReady] = useState(false);
 
   useEffect(() => {
-    if (!visible) return;
+    if (!visible) {
+      setParticlesReady(false);
+      return;
+    }
     fireHaptics();
-    if (!onDone) return;
-    const timer = setTimeout(onDone, 3200);
-    return () => clearTimeout(timer);
+    // Mount the ~120 particles on the next frame so the flash + ring + emoji
+    // render instantly on click (no perceptible delay); the confetti rain fills
+    // in a frame later.
+    const raf = requestAnimationFrame(() => setParticlesReady(true));
+    const timer = onDone ? setTimeout(onDone, 3200) : undefined;
+    return () => {
+      cancelAnimationFrame(raf);
+      if (timer) clearTimeout(timer);
+    };
   }, [visible]);
 
   if (!visible) return null;
@@ -243,13 +256,17 @@ export const ConfettiOverlay = React.memo(function ConfettiOverlay({ visible, on
   return (
     <View style={styles.overlay} pointerEvents="none">
       <FlashLayer />
-      {falls.map((p, i) => (
-        <FallingParticle key={`f${i}`} p={p} />
-      ))}
-      {bursts.map((p, i) => (
-        <BurstParticle key={`b${i}`} p={p} />
-      ))}
       <CenterPop emoji={emoji} />
+      {particlesReady && (
+        <>
+          {falls.map((p, i) => (
+            <FallingParticle key={`f${i}`} p={p} />
+          ))}
+          {bursts.map((p, i) => (
+            <BurstParticle key={`b${i}`} p={p} />
+          ))}
+        </>
+      )}
     </View>
   );
 });
