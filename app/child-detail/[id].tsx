@@ -18,6 +18,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFamilyStore } from '@/stores/familyStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useGiftsStore } from '@/stores/giftsStore';
+import { useMissionsStore } from '@/stores/missionsStore';
 import { supabase } from '@/lib/supabase';
 import { Card } from '@/components/ui/Card';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -34,6 +35,7 @@ export default function ChildDetailScreen() {
   const insets = useSafeAreaInsets();
   const { members, removeChild, updateChildPassword } = useFamilyStore();
   const { gifts, fetchGifts } = useGiftsStore();
+  const { submissions, fetchSubmissions } = useMissionsStore();
   const profile = useAuthStore((s) => s.profile);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loadingTx, setLoadingTx] = useState(true);
@@ -45,6 +47,9 @@ export default function ChildDetailScreen() {
 
   const child = members.find((m) => m.id === id);
   const childGifts = gifts.filter((g) => g.child_id === id);
+  const childActiveMissions = submissions.filter(
+    (s) => s.child_id === id && (s.status === 'claimed' || s.status === 'pending')
+  );
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -66,11 +71,12 @@ export default function ChildDetailScreen() {
       setGiftsChecked(false);
       if (profile?.family_id) {
         await fetchGifts(profile.family_id);
+        await fetchSubmissions(profile.family_id);
       }
       setGiftsChecked(true);
     };
     loadGifts();
-  }, [id, profile?.family_id, fetchGifts]);
+  }, [id, profile?.family_id, fetchGifts, fetchSubmissions]);
 
   if (!child) return null;
 
@@ -159,14 +165,22 @@ export default function ChildDetailScreen() {
         <Text style={styles.points}>{child.points_balance} pts</Text>
 
         <View style={styles.statsRow}>
-          <View style={styles.statChip}>
+          <Touchable
+            style={styles.statChip}
+            onPress={() => router.push('/(parent)/gifts')}
+            accessibilityLabel={t('gifts.title')}
+          >
             <Ionicons name="gift" size={16} color="#fff" />
             <Text style={styles.statValue}>{childGifts.length}</Text>
-          </View>
-          <View style={styles.statChip}>
-            <Ionicons name="time" size={16} color="#fff" />
-            <Text style={styles.statValue}>{transactions.length}</Text>
-          </View>
+          </Touchable>
+          <Touchable
+            style={styles.statChip}
+            onPress={() => router.push('/(parent)/missions')}
+            accessibilityLabel={t('missions.title')}
+          >
+            <Ionicons name="rocket" size={16} color="#fff" />
+            <Text style={styles.statValue}>{childActiveMissions.length}</Text>
+          </Touchable>
         </View>
       </LinearGradient>
 
