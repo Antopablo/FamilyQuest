@@ -26,6 +26,7 @@ export default function ParentMissionDetailScreen() {
 
   const [assignLoading, setAssignLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
   const handleConfettiDone = useCallback(() => setShowConfetti(false), []);
 
   // On this detail screen, hide the parent tab's native "Missions" header so the
@@ -39,7 +40,8 @@ export default function ParentMissionDetailScreen() {
 
   const mission = missions.find((m) => m.id === id);
   const missionSubmissions = submissions.filter((s) => s.mission_id === id);
-  const pendingSubmissions = missionSubmissions.filter((s) => s.status === 'pending');
+  const awaitingSubmissions = missionSubmissions.filter((s) => s.status === 'pending' || s.status === 'claimed');
+  const resolvedSubmissions = missionSubmissions.filter((s) => s.status === 'approved' || s.status === 'rejected');
 
   const children = members.filter((m) => m.role === 'child');
   const assignedChildIds = missionSubmissions
@@ -177,12 +179,12 @@ export default function ParentMissionDetailScreen() {
         </View>
       </Card>
 
-      {missionSubmissions.length > 0 && (
+      {awaitingSubmissions.length > 0 && (
         <>
           <Text style={styles.sectionTitle}>
-            {t('missions.pendingSubmissions')} ({pendingSubmissions.length})
+            {t('missions.pendingSubmissions')} ({awaitingSubmissions.length})
           </Text>
-          {missionSubmissions.map(renderSubmission)}
+          {awaitingSubmissions.map(renderSubmission)}
         </>
       )}
 
@@ -216,6 +218,28 @@ export default function ParentMissionDetailScreen() {
             </View>
           ))}
         </>
+      )}
+
+      {resolvedSubmissions.length > 0 && (
+        <View style={styles.dropdown}>
+          <Touchable style={styles.dropdownHeader} onPress={() => setHistoryOpen((v) => !v)}>
+            <Ionicons name="time-outline" size={18} color={COLORS.textSecondary} />
+            <Text style={styles.dropdownTitle}>{t('missions.history')}</Text>
+            <View style={styles.dropdownBadge}>
+              <Text style={styles.dropdownBadgeText}>{resolvedSubmissions.length}</Text>
+            </View>
+            <Ionicons
+              name={historyOpen ? 'chevron-up' : 'chevron-down'}
+              size={20}
+              color={COLORS.textSecondary}
+            />
+          </Touchable>
+          {historyOpen && (
+            <View style={styles.dropdownBody}>
+              {resolvedSubmissions.map(renderSubmission)}
+            </View>
+          )}
+        </View>
       )}
 
     </ScrollView>
@@ -351,5 +375,40 @@ const styles = StyleSheet.create({
     width: 1,
     height: 20,
     backgroundColor: COLORS.border,
+  },
+  dropdown: {
+    marginTop: SPACING.md,
+  },
+  dropdownHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    backgroundColor: COLORS.surface,
+    borderRadius: BORDER_RADIUS.md,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.md,
+  },
+  dropdownTitle: {
+    flex: 1,
+    fontSize: FONT_SIZES.md,
+    fontWeight: '600',
+    color: COLORS.textPrimary,
+  },
+  dropdownBadge: {
+    minWidth: 24,
+    height: 24,
+    borderRadius: 12,
+    paddingHorizontal: 6,
+    backgroundColor: COLORS.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dropdownBadgeText: {
+    color: '#fff',
+    fontSize: FONT_SIZES.xs,
+    fontWeight: '700',
+  },
+  dropdownBody: {
+    marginTop: SPACING.sm,
   },
 });

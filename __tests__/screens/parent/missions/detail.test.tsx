@@ -220,6 +220,7 @@ describe('ParentMissionDetailScreen', () => {
   it('renders approved submission status text', () => {
     mockSubmissions[0] = { ...mockSubmissions[0], status: 'approved' };
     render(<ParentMissionDetailScreen />);
+    fireEvent.press(screen.getByText('missions.history'));
     expect(screen.getByText('missions.approved')).toBeTruthy();
     expect(screen.queryByText('missions.rejected')).toBeNull();
   });
@@ -227,7 +228,18 @@ describe('ParentMissionDetailScreen', () => {
   it('renders rejected submission status text', () => {
     mockSubmissions[0] = { ...mockSubmissions[0], status: 'rejected' };
     render(<ParentMissionDetailScreen />);
+    fireEvent.press(screen.getByText('missions.history'));
     expect(screen.getByText('missions.rejected')).toBeTruthy();
+  });
+
+  it('keeps resolved submissions hidden until the history dropdown is opened', () => {
+    mockSubmissions[0] = { ...mockSubmissions[0], status: 'approved' };
+    render(<ParentMissionDetailScreen />);
+    // Collapsed by default: the dropdown header shows but not the status text.
+    expect(screen.getByText('missions.history')).toBeTruthy();
+    expect(screen.queryByText('missions.approved')).toBeNull();
+    fireEvent.press(screen.getByText('missions.history'));
+    expect(screen.getByText('missions.approved')).toBeTruthy();
   });
 
   // --- Quick actions: assign + validate for unassigned children ---
